@@ -28,13 +28,19 @@ if auto_refresh:
         st.session_state.sleep_time = number
         
     with rolling_window:  
-        window_size = st.slider('Change size of rolling window in minutes', min_value=1, max_value=30, value=10, step=1)
+        window_size = st.slider('Change size of rolling window in minutes',
+                                min_value=1,
+                                max_value=30,
+                                value=10,
+                                step=1)
+
         now1min = now - timedelta(minutes=window_size)
 
 dt_string = now.strftime("%Y-%m-%d %H:%M:%S:%M")
 st.write(f"Last update: {dt_string}")
 
 try:
+
     client = MongoClient("mongodb://localhost:27017/")
     dbname = client['KafkaProject']
     collection_name = dbname["Light-Temp-Volt"]
@@ -44,11 +50,11 @@ try:
     query =  {'DateTime':{'$gte':minback10,'$lt':now}}
     
     items = collection_name.find(query)
-    
-    # items = list(collection_name.find())
+
     df_ts = pd.DataFrame(items)
     client.close()
 except:
+
     client.close()
     st.write("Please Ensure MongoDB instance is running")
 
@@ -92,14 +98,12 @@ if 'df_ts' in locals():
     with st.container():
          
         with current1:
-             
             st.metric("Current Voltage", str(df_ts.tail(1)["Voltage"].item()) + " V")
+
         with current2:
-        
             st.metric("Current Lux", str(df_ts.tail(1)["Lux"].item()) + " Lux")
         
         with current3:
-        
             st.metric("Current Temperature", str(df_ts.tail(1)["Temperature"].item()) + " C")
                 
     fig = px.line(df_ts, x='DateTime', y="Voltage", markers=True)
@@ -128,12 +132,6 @@ if 'df_ts' in locals():
         if auto_refresh:
             fig.update_xaxes(range=[now1min, now])
         st.plotly_chart(fig, use_container_width=True)
-        
-    # fig = go.Figure()
-    
-    # fig.add_trace(go.Scatter(x=df_ts['DateTime'], y=df_ts['Candela'], name='Gaps'))
-    
-    # st.plotly_chart(fig, use_container_width=True)
             
     del df_ts, items
 

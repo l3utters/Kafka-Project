@@ -63,11 +63,13 @@ if location != "":
             
             with st.container():
                 
-                st.metric("Weather at " + str(forecast_time) +":", value= str(response["list"][0]['main']['temp']) + " °C")
+                st.metric("Weather at " + str(forecast_time) +":",
+                          value = str(response["list"][0]['main']['temp']) + " °C")
             
                 st.metric('Weather Description: ', hour_forecast.capitalize())
                 
-                st.metric('Cloud Coverage Percentage: ', str(response["list"][0]['clouds']['all']) + "%")
+                st.metric('Cloud Coverage Percentage: ',
+                          str(response["list"][0]['clouds']['all']) + "%")
             
         hour_forecast = response["list"][1]["weather"][0]["description"]
         forecast_time = response["list"][1]["dt_txt"]
@@ -76,11 +78,13 @@ if location != "":
             
             with st.container():
             
-                st.metric("Weather at " + str(forecast_time) +":", value= str(response["list"][1]['main']['temp']) + " °C")
-            
+                st.metric("Weather at " + str(forecast_time) +":",
+                          value= str(response["list"][1]['main']['temp']) + " °C")
+           
                 st.metric('Weather Description: ', hour_forecast.capitalize())
                 
-                st.metric('Cloud Coverage Percentage: ', str(response["list"][1]['clouds']['all']) + "%")
+                st.metric('Cloud Coverage Percentage: ',
+                          str(response["list"][1]['clouds']['all']) + "%")
             
         hour_forecast = response["list"][2]["weather"][0]["description"]
         forecast_time = response["list"][2]["dt_txt"]
@@ -89,11 +93,14 @@ if location != "":
             
             with st.container():
             
-                st.metric("Weather at " + str(forecast_time) +":", value= str(response["list"][2]['main']['temp']) + " °C")
+                st.metric("Weather at " + str(forecast_time) +":",
+                          value= str(response["list"][2]['main']['temp']) + " °C")
                 
-                st.metric('Weather Description: ', hour_forecast.capitalize())
+                st.metric('Weather Description: ',
+                          hour_forecast.capitalize())
                     
-                st.metric('Cloud Coverage Percentage: ', str(response["list"][2]['clouds']['all']) + "%")
+                st.metric('Cloud Coverage Percentage: ',
+                          str(response["list"][2]['clouds']['all']) + "%")
                 
     st.subheader("5 Day Forecast")
             
@@ -110,10 +117,10 @@ if location != "":
                              response["list"][i]['main']['temp'],
                              response["list"][i]['clouds']['all']]
     
-    fig = px.bar(weather_df, x='Date-Time', y ='Temperature', text="Weather Description", color='Cloud Coverage (%)')
+    fig = px.bar(weather_df,
+                 x='Date-Time',
+                 y ='Temperature',
+                 text="Weather Description",
+                 color='Cloud Coverage (%)')
     
     st.plotly_chart(fig, use_container_width=True)
-
-# time.sleep(10800)
-
-# st.experimental_rerun()

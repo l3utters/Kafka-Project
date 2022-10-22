@@ -8,8 +8,11 @@ import sys
 #press enter to close the script
 try:
 
-    producer = KafkaProducer(bootstrap_servers='localhost:9092', client_id='PythonProducer'
-                                ,acks='all', retries=0) 
+    client_name = 'PythonProducer'
+
+    producer = KafkaProducer(bootstrap_servers='localhost:9092',
+                             client_id=client_name,
+                             acks='all', retries=0) 
     
     print('Connected to Broker')
     
@@ -45,6 +48,7 @@ try:
         producer.send('CandelaTemperature', num_int, num_int)
         
 except KeyboardInterrupt:
+
     ser.close()
     print('Serial Port Closed')
     producer.close()
@@ -56,6 +60,7 @@ except KeyboardInterrupt:
         time.sleep(1)
 
 except:
+
     ser.close()
     producer.close()
     enter = input('Press ENTER to close producer')
@@ -63,4 +68,3 @@ except:
     
         sys.exit('Closing Producer Client')
         time.sleep(1)
-

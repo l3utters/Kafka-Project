@@ -16,11 +16,14 @@ st.header("Analytics")
 
 Analysis_type = st.selectbox("What type of Analysis?", options = ("Historic Data","Averages", "Running Averages", "Trend Analysis"))
 
+Mongo_client = 'KafkaProject'
+Mongo_collection = "Light-Temp-Volt"
+
 def plotting(time_from, time_till):
     
     client = MongoClient("mongodb://localhost:27017/")
-    dbname = client['KafkaProject']
-    collection_name = dbname["Light-Temp-Volt"]
+    dbname = client[Mongo_client]
+    collection_name = dbname[Mongo_collection]
 
     query =  {'DateTime':{'$gte':time_from,'$lt':time_till}}
 
@@ -49,7 +52,6 @@ if Analysis_type == "Historic Data":
         st.plotly_chart(fig, use_container_width=True)
         
         fig = px.line(df_ts, x="DateTime", y = "Lux")
-        # fig.update_yaxes(range=[0,25])
         fig.update_layout(xaxis_title="Time", yaxis_title="Lux")
         st.plotly_chart(fig, use_container_width=True)
         
@@ -63,8 +65,9 @@ if Analysis_type == "Historic Data":
         date_range = st.date_input("Date to view", value = datetime.now())
         
         time_range = st.slider("Time range to view",
-         value=(datetime(2022, 1, 1, 0, 0).time(), datetime(2022, 1, 1, 23, 59).time()), 
-         format="HH:MM")
+         value=(datetime(2022, 1, 1, 0, 0).time(),
+                datetime(2022, 1, 1, 23, 59).time()), 
+                format="HH:MM")
         
         time_from = datetime.combine(date_range, time_range[0])
         
@@ -368,7 +371,14 @@ if Analysis_type == "Trend Analysis":
         
         fig = make_subplots(rows=1, cols=1, specs=[[{"secondary_y": True}]])
         
-        fig.add_trace(go.Scatter(x=df_ts['DateTime'], y = df_ts["Lux"], mode="markers", line=dict(color="#304DDF")),row=1, col=1, secondary_y=False)
+        fig.add_trace(go.Scatter(x=df_ts['DateTime'],
+                                 y = df_ts["Lux"],
+                                 mode="markers",
+                                 line=dict(color="#304DDF")),
+                                 row=1,
+                                 col=1,
+                                 secondary_y=False)
+
         fig.update_xaxes(range=(time_from, time_till))
         fig.add_trace(go.Scatter(x=df_ts['DateTime'], y=p(x), line=dict(color="#FF4F00"), name='Trend'))
         fig.update_layout(xaxis_title="Time", yaxis_title="Lux")
@@ -393,9 +403,20 @@ if Analysis_type == "Trend Analysis":
         p = np.poly1d(z)
         
         fig = make_subplots(rows=1, cols=1, specs=[[{"secondary_y": True}]])
-        fig.add_trace(go.Scatter(x=df_ts['DateTime'], y = df_ts["Temperature"], mode="markers", line=dict(color="#304DDF")),row=1, col=1, secondary_y=False)
+        fig.add_trace(go.Scatter(x=df_ts['DateTime'],
+                                 y = df_ts["Temperature"],
+                                 mode="markers",
+                                 line=dict(color="#304DDF")),
+                                 row=1,
+                                 col=1,
+                                 secondary_y=False)
+
         fig.update_yaxes(range=[0,50])
-        fig.add_trace(go.Scatter(x=df_ts['DateTime'], y=p(x), line=dict(color="#FF4F00"), name='Trend'))
+        fig.add_trace(go.Scatter(x=df_ts['DateTime'],
+                                 y=p(x),
+                                 line=dict(color="#FF4F00"),
+                                 name='Trend'))
+
         fig.update_xaxes(range=(time_from, time_till))
         fig.update_layout(xaxis_title="Time", yaxis_title="Celcius")
         
