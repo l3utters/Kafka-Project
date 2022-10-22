@@ -4,7 +4,7 @@ import requests
 import pandas as pd
 import plotly.express as px
 
-api_key = "0d477d24ba13b95ef8b62544c75479df"
+api_key = ""
 
 st.set_page_config(layout="wide", initial_sidebar_state='collapsed', page_icon="📊")
 
